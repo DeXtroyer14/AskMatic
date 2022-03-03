@@ -15,6 +15,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+
+    <!-- LZ-sctring -->
+    <script language="javascript" src="js/lz-string.js"></script>
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -105,18 +109,25 @@
 
             <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
                 <h1 class="display-4 fw-normal">Importar datos</h1>
-                <p class="fs-5 text-muted">Aquí podrás importar preguntas y respuestas exportados por esta misma APP, por favor si aún no lo has hecho, haz una copia de los datos existentes ya que el importar los reemplazará por completo, puedes hacerlo haciendo click <a class="text-decoration-none" href="#" onclick="">AQUÍ</a></p>
+                <p class="fs-5 text-muted">Aquí podrás importar preguntas y respuestas exportados por esta misma APP,
+                    por favor si aún no lo has hecho, haz una copia de los datos existentes ya que el importar los
+                    reemplazará por completo, puedes hacerlo haciendo click <a id="enlaceDescarga"
+                        class="text-decoration-none" href="#" onclick="DescargarDatos()">AQUÍ</a></p>
             </div>
 
         </header>
 
 
 
-
+        <div class="col-md">
         <main>
-
-
-
+            <div id="FormularioImportar">
+                <div class="input-group">
+                    <input type="file" class="form-control" id="ArchivoAImportar"
+                        aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept=".json">
+                    <button class="btn btn-outline-primary" onclick="ImportarArchivo()" type="button">Subir</button>
+                </div>
+            </div>
         </main>
 
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
