@@ -68,7 +68,7 @@ function MenuCrearYSeleccionarCategoria() {
 
 
 
-  var ArrayCategorias = JSON.parse(localStorage.getItem("Categorias"))
+  var ArrayCategorias = JSON.parse(LZString.decompress(localStorage.getItem("Categorias")))
   ArrayCategorias.forEach(ListarCategorias);
 
   document.getElementById("formulario").innerHTML = MenuParte1 + listaCategorias + MenuParte2;
@@ -98,14 +98,14 @@ function MenuCrearYSeleccionarCategoria() {
 
 function MenuListaPreguntas() {
   var IDCategoriaSeleccionada = document.getElementById("CategoriaSeleccionada").value
-  var NombreCategoriaSeleccionada = JSON.parse(localStorage.getItem("Categorias"))[IDCategoriaSeleccionada]
+  var NombreCategoriaSeleccionada = JSON.parse(LZString.decompress(localStorage.getItem("Categorias")))[IDCategoriaSeleccionada]
 
   if (localStorage.getItem("Preguntas-" + NombreCategoriaSeleccionada) === null) {
     PrimeraPregunta();
   } else {
     document.getElementById("ListaPreguntas").innerHTML = ""
-    var ArrayPreguntas = JSON.parse(localStorage.getItem("Preguntas-" + NombreCategoriaSeleccionada))
-    var ArrayRespuestas = JSON.parse(localStorage.getItem("Respuestas-" + NombreCategoriaSeleccionada))
+    var ArrayPreguntas = JSON.parse(LZString.decompress(localStorage.getItem("Preguntas-" + NombreCategoriaSeleccionada)))
+    var ArrayRespuestas = JSON.parse(LZString.decompress(localStorage.getItem("Respuestas-" + NombreCategoriaSeleccionada)))
     for (let i = 0; i < ArrayPreguntas.length; i++) {
       AñadirPreguntaExtra(ArrayPreguntas[i], ArrayRespuestas[i])
     }
@@ -132,7 +132,7 @@ function PrimeraPregunta() {
 
 function GuardarPreguntas() {
   var IDCategoriaSeleccionada = document.getElementById("CategoriaSeleccionada").value
-  var NombreCategoriaSeleccionada = JSON.parse(localStorage.getItem("Categorias"))[IDCategoriaSeleccionada]
+  var NombreCategoriaSeleccionada = JSON.parse(LZString.decompress(localStorage.getItem("Categorias")))[IDCategoriaSeleccionada]
 
   var Preguntas = document.getElementsByName('pregunta[]');
   var Respuestas = document.getElementsByName('respuesta[]');
@@ -143,16 +143,21 @@ function GuardarPreguntas() {
   for (var i = 0; i < Preguntas.length; i++) {
     var a = Preguntas[i];
     var b = Respuestas[i];
-    p = p + a.value + ';';
-    r = r + b.value + ';';
+    if(a.value){
+      console.log(a.value)
+      p = p + a.value + ';';
+      r = r + b.value + ';';
+    }
   }
 
   var ArrayPreguntas = p.slice(0, -1).split(";");
   var ArrayRespuestas = r.slice(0, -1).split(";");
 
-  localStorage.setItem("Preguntas-" + NombreCategoriaSeleccionada, JSON.stringify(ArrayPreguntas))
-  localStorage.setItem("Respuestas-" + NombreCategoriaSeleccionada, JSON.stringify(ArrayRespuestas))
+  localStorage.setItem("Preguntas-" + NombreCategoriaSeleccionada, LZString.compress(JSON.stringify(ArrayPreguntas)))
+  localStorage.setItem("Respuestas-" + NombreCategoriaSeleccionada, LZString.compress(JSON.stringify(ArrayRespuestas)))
 
+
+  MenuListaPreguntas()
 }
 
 
@@ -161,15 +166,15 @@ function AñadirCategoriaLocalStorage(NuevaCategoria) {
 
   if (!localStorage.getItem("Categorias")) {
     var ArrayNuevaCategoria = [NuevaCategoria];
-    localStorage.setItem("Categorias", JSON.stringify(ArrayNuevaCategoria))
+    localStorage.setItem("Categorias", LZString.compress(JSON.stringify(ArrayNuevaCategoria)))
     CrearFormulario()
   } else {
-    var ArrayCategoriasActuales = JSON.parse(localStorage.getItem("Categorias"))
+    var ArrayCategoriasActuales = JSON.parse(LZString.decompress(localStorage.getItem("Categorias")))
     if (ArrayCategoriasActuales.includes(NuevaCategoria)) {
       AlertaCategoriaExistente()
     } else {
       ArrayCategoriasActuales.push(NuevaCategoria)
-      localStorage.setItem("Categorias", JSON.stringify(ArrayCategoriasActuales))
+      localStorage.setItem("Categorias", LZString.compress(JSON.stringify(ArrayCategoriasActuales)))
       document.getElementById("categoria").value = '';
     }
 
