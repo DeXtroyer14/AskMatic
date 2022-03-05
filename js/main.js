@@ -20,17 +20,54 @@ function AlertaCategoriaExistente() {
   AlertaCategoriaExistente.toggle()
 }
 
+function AlertaSinCategoriaExistente() {
+  var AlertaCategoriaExistente = new bootstrap.Modal(document.getElementById('AlertaSinCategorias'))
+  AlertaCategoriaExistente.toggle()
+}
+
+function AlertaSinPreguntas() {
+  var AlertaCategoriaExistente = new bootstrap.Modal(document.getElementById('AlertaSinPreguntas'))
+  AlertaCategoriaExistente.toggle()
+}
+
 function EliminarDatos() {
   localStorage.clear()
   location.reload();
 }
 
-function CrearFormulario() {
+function CrearFormularioCrearPreguntas() {
   //Si no existe ninguna categoría guardada mostramos un input para añadir una
   if (localStorage.getItem("Categorias") === null) {
     FormularioAñadirCategoria()
   } else {
     MenuCrearYSeleccionarCategoria()
+  }
+}
+
+function CrearFormularioContestarPreguntas() {
+  //Si no existe ninguna categoría guardada mostramos un input para añadir una
+  if (localStorage.getItem("Categorias") === null) {
+    AlertaSinCategoriaExistente()
+  } else {
+    MenuSeleccionarCategoriaParaPreguntar()
+  }
+}
+
+function MenuSeleccionarCategoriaParaPreguntar() {
+  var ArrayCategorias = JSON.parse(LZString.decompress(localStorage.getItem("Categorias")))
+  var listaCategorias = null
+  ArrayCategorias.forEach(ListarCategorias);
+
+  document.getElementById("SelectCategoria").innerHTML = listaCategorias;
+  document.getElementById("SelectCategoria").removeAttribute("disabled");
+  document.getElementById("Empezar").removeAttribute("disabled");
+
+  function ListarCategorias(item, index) {
+    if (listaCategorias === null) {
+      listaCategorias = '<option value="' + index + '">' + item + '</option>'
+    } else {
+      listaCategorias = listaCategorias.concat('<option value="', index, '">', item, '</option>')
+    }
   }
 }
 
@@ -87,7 +124,7 @@ function MenuCrearYSeleccionarCategoria() {
   document.getElementById("categoria").addEventListener("keyup", function (event) {
     if (event.code === "Enter") {
       MandarCategoria();
-      CrearFormulario();
+      CrearFormularioCrearPreguntas();
       return false;
     }
   });
@@ -121,7 +158,7 @@ function AñadirPreguntaExtra(pregunta, respuesta) {
   if (respuesta == null) {
     var respuesta = ""
   }
-  const TimeoutAñadirPreguntaExtra = setTimeout(function () { document.getElementById("ListaPreguntas").insertAdjacentHTML('beforeend','<div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header py-3"> <div class="form-floating mb-3"> <input type="text" class="form-control" name="pregunta[]" placeholder="Pregunta" value="' + pregunta + '"> <label for="floatingInput">Pregunta</label> </div> </div> <div class="card-body"><div class="form-floating mb-3"> <input type="text" class="form-control" name="respuesta[]" placeholder="Respuesta" value="' + respuesta + '"> <label for="floatingInput">Respuesta</label> </div></div> </div>') }, 0);
+  const TimeoutAñadirPreguntaExtra = setTimeout(function () { document.getElementById("ListaPreguntas").insertAdjacentHTML('beforeend', '<div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header py-3"> <div class="form-floating mb-3"> <input type="text" class="form-control" name="pregunta[]" placeholder="Pregunta" value="' + pregunta + '"> <label for="floatingInput">Pregunta</label> </div> </div> <div class="card-body"><div class="form-floating mb-3"> <input type="text" class="form-control" name="respuesta[]" placeholder="Respuesta" value="' + respuesta + '"> <label for="floatingInput">Respuesta</label> </div></div> </div>') }, 0);
   //document.getElementById("ListaPreguntas").innerHTML += '<div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header py-3"> <div class="form-floating mb-3"> <input type="text" class="form-control" name="pregunta[]" placeholder="Pregunta" value="' + pregunta + '"> <label for="floatingInput">Pregunta</label> </div> </div> <div class="card-body"><div class="form-floating mb-3"> <input type="text" class="form-control" name="respuesta[]" placeholder="Respuesta" value="' + respuesta + '"> <label for="floatingInput">Respuesta</label> </div></div> </div>';
 }
 
@@ -143,7 +180,7 @@ function GuardarPreguntas() {
   for (var i = 0; i < Preguntas.length; i++) {
     var a = Preguntas[i];
     var b = Respuestas[i];
-    if(a.value){
+    if (a.value) {
       console.log(a.value)
       p = p + a.value + ';';
       r = r + b.value + ';';
@@ -167,7 +204,7 @@ function AñadirCategoriaLocalStorage(NuevaCategoria) {
   if (!localStorage.getItem("Categorias")) {
     var ArrayNuevaCategoria = [NuevaCategoria];
     localStorage.setItem("Categorias", LZString.compress(JSON.stringify(ArrayNuevaCategoria)))
-    CrearFormulario()
+    CrearFormularioCrearPreguntas()
   } else {
     var ArrayCategoriasActuales = JSON.parse(LZString.decompress(localStorage.getItem("Categorias")))
     if (ArrayCategoriasActuales.includes(NuevaCategoria)) {
@@ -208,4 +245,114 @@ function ImportarArchivo() {
 
   fileReader.readAsText(fileToLoad, "UTF-8")
 
+}
+
+
+
+function ComenzarPreguntas() {
+  var categoriaSeleccionada = JSON.parse(LZString.decompress(localStorage.getItem("Categorias")))[document.getElementById("SelectCategoria").value]
+  sessionStorage.setItem("Preguntas", LZString.decompress(localStorage.getItem("Preguntas-" + categoriaSeleccionada)))
+  sessionStorage.setItem("Respuestas", LZString.decompress(localStorage.getItem("Respuestas-" + categoriaSeleccionada)))
+  if (sessionStorage.getItem("Preguntas")) {
+    sessionStorage.removeItem("RespuestasDadas")
+    SiguientePregunta(0)
+  } else {
+    AlertaSinPreguntas()
+  }
+}
+
+function SiguientePregunta(id) {
+  PreguntaActual = JSON.parse(sessionStorage.getItem("Preguntas"))[id]
+  if (id < [JSON.parse(sessionStorage.getItem("Preguntas")).length - 1]) {
+    document.getElementById("formulario").innerHTML = '<div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header py-3"> <div class="form-floating mb-3">' + PreguntaActual + '</div> </div> <div class="card-body"><div class="form-floating mb-3"> <input type="text" class="form-control" id="RespuestaDada" placeholder="Respuesta"> <label for="floatingInput">Respuesta</label> </div></div> </div><button type="button" class="w-100 btn btn-lg btn-outline-primary" onclick="GuardarRespuesta(' + id + ')">Siguiente Pregunta</button>';
+  } else {
+    document.getElementById("formulario").innerHTML = '<div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header py-3"> <div class="form-floating mb-3">' + PreguntaActual + '</div> </div> <div class="card-body"><div class="form-floating mb-3"> <input type="text" class="form-control" id="RespuestaDada" placeholder="Respuesta"> <label for="floatingInput">Respuesta</label> </div></div> </div><button type="button" class="w-100 btn btn-lg btn-outline-primary" onclick="GuardarRespuesta(' + id + ')">Terminar</button>';
+  }
+
+  //Al presionar enter mandamos la nueva categoría a LocalStorage
+  document.getElementById("RespuestaDada").addEventListener("keyup", function (event) {
+    if (event.code === "Enter") {
+      GuardarRespuesta(id)
+      return false;
+    }
+  });
+
+}
+
+function GuardarRespuesta(id) {
+  console.log(id)
+  if (sessionStorage.getItem("RespuestasDadas")) {
+    RespuestasDadas = JSON.parse(sessionStorage.getItem("RespuestasDadas"))
+    RespuestasDadas.push(document.getElementById("RespuestaDada").value)
+    sessionStorage.setItem("RespuestasDadas", JSON.stringify(RespuestasDadas))
+  } else {
+    sessionStorage.setItem("RespuestasDadas", "[\"" + document.getElementById("RespuestaDada").value + "\"]")
+  }
+  if (id < [JSON.parse(sessionStorage.getItem("Preguntas")).length - 1]) {
+    SiguientePregunta(id + 1)
+  } else {
+    window.location.replace("resultados.html"); SiguientePregunta(id + 1)
+  }
+}
+
+function MostrarResultados() {
+  if (sessionStorage.getItem("RespuestasDadas")) {
+    var Preguntas = JSON.parse(sessionStorage.getItem("Preguntas"))
+    var Respuestas = JSON.parse(sessionStorage.getItem("Respuestas"))
+    var RespuestasDadas = JSON.parse(sessionStorage.getItem("RespuestasDadas"))
+    for (var i = 0; i < Preguntas.length; i++) {
+      if (similarity(Respuestas[i], RespuestasDadas[i]) >= 0.8) {
+        document.getElementById("formulario").innerHTML += '<div name="respuesta"> <div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header"> <h3> ' + Preguntas[i] + ' </h3> </div> <ul class="list-group list-group-flush"> <li class="list-group-item text-white bg-success">' + RespuestasDadas[i] + '</li> <li class="list-group-item text-white bg-success">' + Respuestas[i] + '</li> </ul> </div> </div>';
+
+      } else {
+        document.getElementById("formulario").innerHTML += '<div name="respuesta"> <div class="card mb-4 rounded-3 shadow-sm"> <div class="card-header"> <h3> ' + Preguntas[i] + ' </h3> </div> <ul class="list-group list-group-flush"> <li class="list-group-item text-white bg-danger">' + RespuestasDadas[i] + '</li> <li class="list-group-item text-white bg-success">' + Respuestas[i] + '</li> </ul> </div> </div>';
+      }
+    }
+  } else {
+    window.location.replace("preguntar.html")
+  }
+
+}
+
+
+// Comparar 2 strings y devolver % de similaridad
+function similarity(s1, s2) {
+  var longer = s1;
+  var shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  var longerLength = longer.length;
+  if (longerLength == 0) {
+    return 1.0;
+  }
+  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
+function editDistance(s1, s2) {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+
+  var costs = new Array();
+  for (var i = 0; i <= s1.length; i++) {
+    var lastValue = i;
+    for (var j = 0; j <= s2.length; j++) {
+      if (i == 0)
+        costs[j] = j;
+      else {
+        if (j > 0) {
+          var newValue = costs[j - 1];
+          if (s1.charAt(i - 1) != s2.charAt(j - 1))
+            newValue = Math.min(Math.min(newValue, lastValue),
+              costs[j]) + 1;
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0)
+      costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
 }

@@ -15,6 +15,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+
+    <!-- LZ-sctring -->
+    <script language="javascript" src="js/lz-string.js"></script>
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -47,6 +51,48 @@
                 <div class="modal-body">
                     Se ha detectado que tu navegador es incompatible, por favor, actualízalo o prueba con otro
                     navegador.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerta No existe aún ninguna categoría y se intenta jugar -->
+    <div class="modal fade" id="AlertaSinCategorias" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">No existe aún ninguna categoría</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Parece que aún no has creado ninguna categoría, tal vez deberías pasarte por <a
+                        href="crear.html">AQUÍ</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerta No existe aún ninguna pregunta y se intenta jugar -->
+    <div class="modal fade" id="AlertaSinPreguntas" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">No existe aún ninguna pregunta</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Parece que aún no has creado ninguna pregunta para esta categoría, tal vez deberías pasarte por <a
+                        href="crear.html">AQUÍ</a>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
@@ -115,7 +161,23 @@
 
         <main>
 
+            <div class="row row-cols-1 mb-3 text-center">
+                <div id="formulario" class="col">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">Selecciona una categoria</h4>
+                        </div>
+                        <div class="card-body">
+                            <select id="SelectCategoria" class="form-select form-select-lg mb-3"
+                                aria-label="Disabled select .form-select-lg" disabled>
 
+                            </select>
+                        </div>
+                    </div>
+                    <button id="Empezar" type="button" class="w-100 btn btn-lg btn-outline-primary"
+                        onclick="ComenzarPreguntas()" disabled>EMPEZAR!</button>
+                </div>
+            </div>
 
         </main>
 
@@ -130,6 +192,9 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script>
+        CrearFormularioContestarPreguntas()
+    </script>
 
 </body>
 

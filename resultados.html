@@ -15,10 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-    <script src="js/main.js"></script>
-
-    <!-- LZ-sctring -->
-    <script language="javascript" src="js/lz-string.js"></script>
 
     <style>
         .bd-placeholder-img {
@@ -84,46 +80,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Alerta si se ha dejado algún campo mal rellenado -->
-    <div class="modal fade" id="InputError" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Error al rellenar un campo</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    Parece que algún campo no se ha rellenado correctamente, por favor intenta corregirlo y vuelve a
-                    probar.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Alerta si se ha dejado algún campo mal rellenado -->
-    <div class="modal fade" id="AlertaCategoriaExistente" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Categoría existente</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    La categoría que has introducido ya existe, elige otro nombre o cambia a esa categoría.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
 </head>
 
 <body>
@@ -149,8 +105,8 @@
             </div>
 
             <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-                <h1 class="display-4 fw-normal">Crear preguntas</h1>
-                <p class="fs-5 text-muted">En esta página podrás crear preguntas de diferentes categorías.</p>
+                <h1 class="display-4 fw-normal">Resultados</h1>
+                <p class="fs-5 text-muted">Hora de ver si has sabido responder correctamente</p>
             </div>
 
         </header>
@@ -159,22 +115,12 @@
 
 
         <main>
+
             <div class="row row-cols-1 mb-3 text-center">
                 <div id="formulario" class="col">
 
                 </div>
             </div>
-            <div class="row row-cols-1 mb-3 text-center">
-                <div id="ListaPreguntas" class="col">
-
-                </div>
-            </div>
-            <div class="row row-cols-1 mb-3 text-center">
-                <div id="BotonesPreguntas" class="col">
-
-                </div>
-            </div>
-
 
         </main>
 
@@ -188,8 +134,9 @@
         </footer>
     </div>
 
+    <script src="js/main.js"></script>
     <script>
-        CrearFormularioCrearPreguntas()
+        setTimeout(MostrarResultados(), 0)
     </script>
 
 </body>
